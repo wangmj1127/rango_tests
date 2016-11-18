@@ -1,6 +1,6 @@
 # Rango Tests for WAD2 and ITECH
 
-You can run this tests as:
+You can run these tests as:
 
 `python manage.py test rango.tests_chapter3`
 
