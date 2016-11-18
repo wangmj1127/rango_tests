@@ -1,4 +1,4 @@
-# WAD2ITECH_tests
+# [Tango with Django] Rango Tests for WAD2 and ITECH
 
 You can run this tests as:
 
