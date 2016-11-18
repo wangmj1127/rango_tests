@@ -7,7 +7,9 @@ python manage.py test rango.tests_chapter4
 ...
 python manage.py test rango.tests_chapter10
 
-These tests are only valid for the Rango app from Tango with Django Book (https://leanpub.com/tangowithdjango19/) up to Chapter 10. Each test runs view's and server tests only and each only checks the given chapter.
+These tests are only valid for the Rango app of the Tango with Django Book (https://leanpub.com/tangowithdjango19/) up to Chapter 10. Each test runs view's and server tests and each checks the given chapter.
+
+If you are in Chapter 6, tests from previous chapters might fail as the strructure of templates/views changes as you progress developing Rang.
 
 # Requirements:
 
