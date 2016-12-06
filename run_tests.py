@@ -6,8 +6,7 @@ __author__ = 'Gerardo Aragon, David Manlove'
 import os, subprocess, shutil
 import config_file_nolive as cf
 import errno, os, stat
-
-# TODO: e-mail results
+import json
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -67,6 +66,11 @@ def main(url_git, student_no, date_deadline):
     and saves results and errors in the 'output' folder for the given student number
     '''
 
+    # copy reports to student directory
+    dir_student = os.path.join(BASE_DIR, "output", student_no)
+    if not os.path.exists(dir_student):
+        os.makedirs(dir_student)
+
     GIT_CLONE = 'git clone '
     GIT_CHKOUT = 'git checkout'
     GIT_CHKOUT_MASTER = 'git checkout master@{' + date_deadline + '23:59:59}'
@@ -79,16 +83,28 @@ def main(url_git, student_no, date_deadline):
     test_cases = cf.dict_chs
     test_files = generate_file_list(test_cases)
     error_in_tests = dict()
+
+    with open(os.path.join(dir_student, 'results.json'), 'w') as fp:
+        json.dump(test_cases, fp, indent=4)
+
     try:
         shutil.rmtree(os.path.join(BASE_DIR, TEMP_DIR), ignore_errors=False, onerror=handleRemoveReadonly)
     except:
         print os.path.join(BASE_DIR, TEMP_DIR) + " does not exist!!"
 
     ## Clone Repository
+    with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
+        fp.write("I found errors while cloning your github repository: "+url_git)
+        fp.write('===========================================================================\n\n\n')
+
     ret = subprocess.call(GIT_CLONE + url_git + " " + TEMP_DIR, shell=True)
     assert ret == 0
 
     # Retrieve log history
+    with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
+        fp.write("I couldn't get your log history in your github repository: "+url_git)
+        fp.write('===========================================================================\n\n\n')
+
     os.chdir(os.path.join(BASE_DIR, TEMP_DIR))
 
     process = subprocess.Popen(GIT_LOG, stdout=subprocess.PIPE)
@@ -97,6 +113,10 @@ def main(url_git, student_no, date_deadline):
     commits.reverse()
 
     print "Repository has " + str(len(commits)) + " commits!"
+
+    with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
+        fp.write("It seems your github repository is not about Rango: "+url_git)
+        fp.write('===========================================================================\n\n\n')
 
     working_dir = ''
     for root, dirs, files in os.walk("."):
@@ -107,6 +127,10 @@ def main(url_git, student_no, date_deadline):
 
     print "Project dir: " + working_dir
     assert os.path.isdir(os.path.abspath(working_dir + '/rango'))
+
+    with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
+        fp.write("I found errors while running the automated tests in github repository: "+url_git)
+        fp.write('===========================================================================\n\n\n')
 
     # Iterate over commits and run tests
     for c in commits:
@@ -139,12 +163,6 @@ def main(url_git, student_no, date_deadline):
     ## -------
     os.chdir(BASE_DIR)
 
-    # copy reports to student directory
-    dir_student = os.path.join(BASE_DIR, "output", student_no)
-    if not os.path.exists(dir_student):
-        os.makedirs(dir_student)
-
-    import json
     with open(os.path.join(dir_student, 'results.json'), 'w') as fp:
         json.dump(test_cases, fp, indent=4)
 
@@ -171,6 +189,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.url is not None and args.student is not None and args.deadline is not None:
-        main(args.url, args.student, args.deadline)
+        try:
+            main(args.url, args.student, args.deadline)
+        except Exception as e:
+            print e.message
     else:
         raise BaseException("url, student number and deadline are required!!. Type 'python main_script.py -h' for further help")
