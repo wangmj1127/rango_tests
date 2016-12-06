@@ -7,6 +7,7 @@ ch4 = {'Chapter4ViewTest.test_view_has_title': False,
         'Chapter4ViewTest.test_index_using_template': False,
         'Chapter4ViewTest.test_about_using_template': False,
         'Chapter4ViewTest.test_rango_picture_displayed': False,
+        'Chapter4ViewTest.test_cat_picture_displayed': False,
         'Chapter4ViewTest.test_about_contain_image': False,
         'Chapter4ViewTest.test_serving_static_files': False}
 
