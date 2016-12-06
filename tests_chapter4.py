@@ -36,6 +36,13 @@ class Chapter4ViewTest(TestCase):
         # Check if is there an image in index page
         self.assertIn('img src="/static/images/rango.jpg'.lower(), response.content.lower())
 
+    # New media test
+    def test_cat_picture_displayed(self):
+        response = self.client.get(reverse('about'))
+
+        # Check if is there an image in index page
+        self.assertIn('img src="/media/cat.jpg'.lower(), response.content.lower())
+
     def test_about_contain_image(self):
         self.client.get(reverse('index'))
         response = self.client.get(reverse('about'))
