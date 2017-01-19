@@ -142,6 +142,10 @@ def main(url_git, student_no, date_deadline):
         if os.path.isdir(os.path.abspath(working_dir + '/rango')):
             os.chdir(working_dir)
             try:
+				subprocess.call('python manage.py makemigrations')
+            except:
+				print "Error while making migrations rango!"
+            try:
                 subprocess.call('python manage.py migrate')
             except:
                 print "Error while migrating rango!"
