@@ -1,7 +1,6 @@
 # Chapter 3
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
 from django.core.urlresolvers import reverse
 import os
 
@@ -29,7 +28,6 @@ import os.path
 #Chapter 9
 from rango.models import User, UserProfile
 from rango.forms import UserForm, UserProfileForm
-from selenium.webdriver.common.keys import Keys
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.storage import default_storage
 from rango.decorators import chapter9
