@@ -41,8 +41,15 @@ class Chapter10SessionTests(TestCase):
     def test_user_number_of_access_and_last_access_to_index(self):
         #Access index page 100 times
         for i in xrange(0, 100):
-            self.client.get(reverse('index'))
+            try:
+                response = self.client.get(reverse('index'))
+            except:
+                try:
+                    response = self.client.get(reverse('rango:index'))
+                except:
+                    return False
             session = self.client.session
+            # old_visists = session['visits']
 
             # Check it exists visits and last_visit attributes on session
             self.assertIsNotNone(self.client.session['visits'])
@@ -67,30 +74,60 @@ class Chapter10SessionTests(TestCase):
 class Chapter10ViewTests(TestCase):
     def test_index_shows_number_of_visits(self):
         #Access index
-        response = self.client.get(reverse('index'))
+        try:
+            response = self.client.get(reverse('index'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:index'))
+            except:
+                return False
 
         # Check it contains visits message
         self.assertIn('visits: 1'.lower(), response.content.lower())
 
     def test_about_page_shows_number_of_visits(self):
         #Access index page to count one visit
-        self.client.get(reverse('index'))
+        try:
+            response = self.client.get(reverse('index'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:index'))
+            except:
+                return False
 
         # Access about page
-        response = self.client.get(reverse('about'))
+        try:
+            response = self.client.get(reverse('about'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:about'))
+            except:
+                return False
 
         # Check it contains visits message
         self.assertIn('visits: 1'.lower(), response.content.lower())
 
     def test_visit_number_is_passed_via_context(self):
         #Access index
-        response = self.client.get(reverse('index'))
+        try:
+            response = self.client.get(reverse('index'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:index'))
+            except:
+                return False
 
         # Check it contains visits message in the context
         self.assertIn('visits', response.context)
 
         #Access about page
-        response = self.client.get(reverse('about'))
+        try:
+            response = self.client.get(reverse('about'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:about'))
+            except:
+                return False
 
         # Check it contains visits message in the context
         self.assertIn('visits', response.context)
