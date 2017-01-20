@@ -24,7 +24,13 @@ class Chapter7ViewTests(TestCase):
     @chapter7
     def test_index_contains_link_to_add_category(self):
         # Access index
-        response = self.client.get(reverse('index'))
+        try:
+            response = self.client.get(reverse('index'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:index'))
+            except:
+                return False
 
         # Check if there is text and a link to add category
         self.assertIn('href="' + reverse('add_category') + '"', response.content)
@@ -109,5 +115,12 @@ class Chapter7ViewTests(TestCase):
 
         # For each category in the database check if contains link to add page
         for category in categories:
-            response = self.client.get(reverse('show_category', args=[category.slug]))
+            try:
+                response = self.client.get(reverse('show_category', args=[category.slug]))
+            except:
+                try:
+                    response = self.client.get(reverse('rango:show_category', args=[category.slug]))
+                except:
+                    return False
+
             self.assertIn(reverse('add_page', args=[category.slug]), response.content)
