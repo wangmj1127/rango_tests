@@ -14,9 +14,9 @@ These tests are only valid for the Rango app of the Tango with Django Book (http
 
 To use these tests, download/clone this repository, open a terminal/command prompt, navigate to this repository directory and run:
 
-python run_tests.py -u https://github.com/<repository url> -s <student name> -d <YYYY-MM-DD>
+python run_tests.py -u "Your GitHub repository" -s "student name" -d "YYYY-MM-DD_
 
-without "<" and ">". Alternatively, you can run each test for each chapter by copying the corresponding chapter's test into trhe "rango" directory and run (in your app directory):
+without "". Alternatively, you can run each test for each chapter by copying the corresponding chapter's test into trhe "rango" directory and run (in your app directory):
 
 `python manage.py test rango.tests_chapter3`
 
