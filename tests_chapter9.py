@@ -172,4 +172,4 @@ class Chapter9ViewTests(TestCase):
         self.assertTrue(os.path.isfile(path_to_image))
 
         # Delete fake file created
-        default_storage.delete('./profile_images/testuser.jpg')
+        default_storage.delete('./media/profile_images/testuser.jpg')

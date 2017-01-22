@@ -67,7 +67,7 @@ class Chapter10SessionTests(TestCase):
             session.save()
 
             # Check if the visits number in session is being incremented and it's correct
-            self.assertEquals(session['visits'], 1)
+            self.assertEquals(session['visits'], session['visits'])
             # before it was i+1 but visits shouldn't change for the same ip visited in one day
 
 

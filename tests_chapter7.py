@@ -63,7 +63,15 @@ class Chapter7ViewTests(TestCase):
 
         for category in categories:
             # Access add category page
-            response = self.client.get(reverse('add_page', args=[category.slug]))
+            try:
+                response = self.client.get(reverse('index'))
+                response = self.client.get(reverse('add_page', args=[category.slug]))
+            except:
+                try:
+                    response = self.client.get(reverse('rango:index'))
+                    response = self.client.get(reverse('rango:add_page', args=[category.slug]))
+                except:
+                    return False
 
             # Check form in response context is instance of CategoryForm
             self.assertTrue(isinstance(response.context['form'], PageForm))
@@ -100,13 +108,21 @@ class Chapter7ViewTests(TestCase):
         response = self.client.get(reverse('show_category', args=['python']))
 
         # Check that there is not a link to add page
-        self.assertNotIn(reverse('add_page', args=['python']), response.content)
-
-        # Access a category that does not exist
-        response = self.client.get(reverse('show_category', args=['other-frameworks']))
-
-        # Check that there is not a link to add page
-        self.assertNotIn(reverse('add_page', args=['other-frameworks']), response.content)
+        try:
+            self.assertNotIn(reverse('add_page', args=['python']), response.content)
+            # Access a category that does not exist
+            response = self.client.get(reverse('show_category', args=['other-frameworks']))
+            # Check that there is not a link to add page
+            self.assertNotIn(reverse('add_page', args=['other-frameworks']), response.content)
+        except:
+            try:
+                self.assertNotIn(reverse('rango:add_page', args=['python']), response.content)
+                # Access a category that does not exist
+                response = self.client.get(reverse('rango:show_category', args=['other-frameworks']))
+                # Check that there is not a link to add page
+                self.assertNotIn(reverse('rango:add_page', args=['other-frameworks']), response.content)
+            except:
+                return False
 
     @chapter7
     def test_category_contains_link_to_add_page(self):
@@ -117,10 +133,10 @@ class Chapter7ViewTests(TestCase):
         for category in categories:
             try:
                 response = self.client.get(reverse('show_category', args=[category.slug]))
+                self.assertIn(reverse('add_page', args=[category.slug]), response.content)
             except:
                 try:
                     response = self.client.get(reverse('rango:show_category', args=[category.slug]))
+                    self.assertIn(reverse('rango:add_page', args=[category.slug]), response.content)
                 except:
                     return False
-
-            self.assertIn(reverse('add_page', args=[category.slug]), response.content)
