@@ -4,7 +4,7 @@ def create_categories():
     # List of categories
     categories = []
 
-    # Create categories from 0 to 7
+    # Create categories from 1 to 10
     for i in xrange(1, 11):
         cat = Category(name="Category " + str(i), likes=i)
         cat.save()

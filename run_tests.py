@@ -50,7 +50,7 @@ def runtests(in_tests, in_errors):
                 out, err = process.communicate()
                 p_status = process.wait()
                 # print err
-                if 'errors' in err or 'Traceback' in err:
+                if 'errors' in err or 'Traceback' in err or 'Errno' in err:
                     print '++++++++++++++++++++++++++++ FAILED!!!!!! ++++++++++++++++++++++++++++'
                     out_errors[key] = temp_test + '\n' + err
                 else:
@@ -113,6 +113,11 @@ def main(url_git, student_no, date_deadline):
     commits.reverse()
 
     print "Repository has " + str(len(commits)) + " commits!"
+    noCommits = len(commits)
+
+    with open(os.path.join(dir_student, 'commits.txt'), 'w') as fp:
+        fp.write(str(len(commits)))
+        fp.write('\n')
 
     with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
         fp.write("It seems your github repository is not about Rango: "+url_git)
@@ -142,9 +147,14 @@ def main(url_git, student_no, date_deadline):
         if os.path.isdir(os.path.abspath(working_dir + '/rango')):
             os.chdir(working_dir)
             try:
-				subprocess.call('python manage.py makemigrations')
+                shutil.rmtree(working_dir + '/rango/migrations', ignore_errors=False, onerror=handleRemoveReadonly)
+                os.remove("db.sqlite3")
             except:
-				print "Error while making migrations rango!"
+                print "Couldn't delete db.sqlite3 and migrations folder"
+            try:
+                subprocess.call('python manage.py makemigrations')
+            except:
+                print "Error while making migrations rango!"
             try:
                 subprocess.call('python manage.py migrate')
             except:
