@@ -109,6 +109,32 @@ class Chapter9ViewTests(TestCase):
         self.assertIn('input type="submit" value="submit"', response.content)
 
     @chapter9
+    def test_login_form_is_displayed_correctly(self):
+        #Access login page
+        try:
+            response = self.client.get(reverse('login'))
+        except:
+            try:
+                response = self.client.get(reverse('rango:login'))
+            except:
+                return False
+
+        #Check form display
+        #Header
+        self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.lower())
+
+        #Username label and input text
+        self.assertIn('Username:', response.content)
+        self.assertIn('input type="text" name="username" value="" size="50"', response.content)
+
+        #Password label and input text
+        self.assertIn('Password:', response.content)
+        self.assertIn('input type="password" name="password" value="" size="50"', response.content)
+
+        #Submit button
+        self.assertIn('input type="submit" value="submit"', response.content)
+
+    @chapter9
     def test_login_provides_error_message(self):
         # Access login page
         try:
