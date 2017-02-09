@@ -147,9 +147,11 @@ def main(url_git, student_no, date_deadline):
         for root, dirs, files in os.walk("."):
             for name in files:
                 if 'manage.py' == name:
-                    working_dir = os.path.dirname(os.path.abspath(root))
+                    working_dir = os.path.abspath(root)
                     break
 
+        print working_dir
+        
         # RUN TESTS HERE!!!!
         if os.path.isdir(os.path.abspath(working_dir + '/rango')):
             os.chdir(working_dir)
