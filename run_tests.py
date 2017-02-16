@@ -161,9 +161,12 @@ def main(url_git, student_no, date_deadline):
             except:
                 print "Couldn't delete db.sqlite3 and migrations folder"
             try:
-                subprocess.call('python manage.py makemigrations')
+                subprocess.call('python manage.py makemigrations rango')
             except:
-                print "Error while making migrations rango!"
+                try:
+                    subprocess.call('python manage.py makemigrations')
+                except:
+                    print "Error while making migrations rango!"
             try:
                 subprocess.call('python manage.py migrate')
             except:
