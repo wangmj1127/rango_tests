@@ -6,9 +6,15 @@ These tests are only valid for the Rango app of the Tango with Django Book (http
 
 ## Requirements:
 
-* Python 2.7
-* Django-1.10
-* Pillow-3.3.1
+* Python 3.6.2
+* bcrypt 3.1.4
+* cffi 1.11.2
+* Django 1.11.7
+* olefile 0.44
+* Pillow 4.3.0 -> On Windows, pip install might fail so download Pillow wheel from: https://www.lfd.uci.edu/~gohlke/pythonlibs/
+* pycparser 2.18
+* pytz 2017.3
+* six 1.11.0
 
 ## How-To
 
@@ -16,7 +22,7 @@ To use these tests, download/clone this repository, open a terminal/command prom
 
 `python run_tests.py -u "Your GitHub repository" -s "student name" -d "YYYY-MM-DD"`
 
-without "". Alternatively, you can run each test for each chapter by copying the corresponding chapter's test into trhe "rango" directory and run (in your app directory):
+without "". Alternatively, you can run each test for each chapter by copying the corresponding chapter's test and, "test_utils.py" and "decorators.py" into the "rango" directory and run (in your app directory):
 
 `python manage.py test rango.tests_chapter3`
 
