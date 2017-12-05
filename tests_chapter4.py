@@ -14,8 +14,8 @@ class Chapter4ViewTest(TestCase):
         response = self.client.get(reverse('index'))
 
         #Check title used correctly
-        self.assertIn('<title>', response.content)
-        self.assertIn('</title>', response.content)
+        self.assertIn('<title>', response.content.decode('ascii'))
+        self.assertIn('</title>', response.content.decode('ascii'))
 
     def test_index_using_template(self):
         response = self.client.get(reverse('index'))
@@ -34,21 +34,21 @@ class Chapter4ViewTest(TestCase):
         response = self.client.get(reverse('index'))
 
         # Check if is there an image in index page
-        self.assertIn('img src="/static/images/rango.jpg'.lower(), response.content.lower())
+        self.assertIn('img src="/static/images/rango.jpg'.lower(), response.content.decode('ascii').lower())
 
     # New media test
     def test_cat_picture_displayed(self):
         response = self.client.get(reverse('about'))
 
         # Check if is there an image in index page
-        self.assertIn('img src="/media/cat.jpg'.lower(), response.content.lower())
+        self.assertIn('img src="/media/cat.jpg'.lower(), response.content.decode('ascii').lower())
 
     def test_about_contain_image(self):
         self.client.get(reverse('index'))
         response = self.client.get(reverse('about'))
 
         # Check if is there an image in index page
-        self.assertIn('img src="/static/images/', response.content)
+        self.assertIn('img src="/static/images/', response.content.decode('ascii'))
 
     def test_serving_static_files(self):
         # If using static media properly result is not NONE once it finds rango.jpg

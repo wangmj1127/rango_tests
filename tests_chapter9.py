@@ -10,7 +10,7 @@ from django.contrib.staticfiles import finders
 #Chapter 5
 from rango.models import Page, Category
 import populate_rango
-import test_utils
+import rango.test_utils as test_utils
 
 #Chapter 6
 from rango.decorators import chapter6
@@ -63,8 +63,8 @@ class Chapter9ViewTests(TestCase):
                 return False
 
         # Check if form is rendered correctly
-        # self.assertIn('<h1>Register with Rango</h1>', response.content)
-        self.assertIn('<strong>register here!</strong><br />'.lower(), response.content.lower())
+        # self.assertIn('<h1>Register with Rango</h1>', response.content.decode('ascii'))
+        self.assertIn('<strong>register here!</strong><br />'.lower(), response.content.decode('ascii').lower())
 
         # Check form in response context is instance of UserForm
         self.assertTrue(isinstance(response.context['user_form'], UserForm))
@@ -80,7 +80,7 @@ class Chapter9ViewTests(TestCase):
         self.assertEquals(response.context['profile_form'].as_p(), profile_form.as_p())
 
         # Check submit button
-        self.assertIn('type="submit" name="submit" value="Register"', response.content)
+        self.assertIn('type="submit" name="submit" value="Register"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_form_is_displayed_correctly(self):
@@ -95,18 +95,18 @@ class Chapter9ViewTests(TestCase):
 
         #Check form display
         #Header
-        self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.lower())
+        self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.decode('ascii').lower())
 
         #Username label and input text
-        self.assertIn('Username:', response.content)
-        self.assertIn('input type="text" name="username" value="" size="50"', response.content)
+        self.assertIn('Username:', response.content.decode('ascii'))
+        self.assertIn('input type="text" name="username" value="" size="50"', response.content.decode('ascii'))
 
         #Password label and input text
-        self.assertIn('Password:', response.content)
-        self.assertIn('input type="password" name="password" value="" size="50"', response.content)
+        self.assertIn('Password:', response.content.decode('ascii'))
+        self.assertIn('input type="password" name="password" value="" size="50"', response.content.decode('ascii'))
 
         #Submit button
-        self.assertIn('input type="submit" value="submit"', response.content)
+        self.assertIn('input type="submit" value="submit"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_form_is_displayed_correctly(self):
@@ -121,18 +121,18 @@ class Chapter9ViewTests(TestCase):
 
         #Check form display
         #Header
-        self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.lower())
+        self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.decode('ascii').lower())
 
         #Username label and input text
-        self.assertIn('Username:', response.content)
-        self.assertIn('input type="text" name="username" value="" size="50"', response.content)
+        self.assertIn('Username:', response.content.decode('ascii'))
+        self.assertIn('input type="text" name="username" value="" size="50"', response.content.decode('ascii'))
 
         #Password label and input text
-        self.assertIn('Password:', response.content)
-        self.assertIn('input type="password" name="password" value="" size="50"', response.content)
+        self.assertIn('Password:', response.content.decode('ascii'))
+        self.assertIn('input type="password" name="password" value="" size="50"', response.content.decode('ascii'))
 
         #Submit button
-        self.assertIn('input type="submit" value="submit"', response.content)
+        self.assertIn('input type="submit" value="submit"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_provides_error_message(self):
@@ -145,11 +145,11 @@ class Chapter9ViewTests(TestCase):
             except:
                 return False
 
-        print response.content
+        print(response.content.decode('ascii'))
         try:
-            self.assertIn('wronguser', response.content)
+            self.assertIn('wronguser', response.content.decode('ascii'))
         except:
-            self.assertIn('Invalid login details supplied.', response.content)
+            self.assertIn('Invalid login details supplied.', response.content.decode('ascii'))
 
     @chapter9
     def test_login_redirects_to_index(self):
@@ -171,7 +171,7 @@ class Chapter9ViewTests(TestCase):
     @chapter9
     def test_upload_image(self):
         # Create fake user and image to upload to register user
-        image = SimpleUploadedFile("testuser.jpg", "file_content", content_type="image/jpeg")
+        image = SimpleUploadedFile("testuser.jpg", b"file_content", content_type="image/jpeg")
         try:
             response = self.client.post(reverse('register'),
                              {'username': 'testuser', 'password':'test1234',
@@ -189,7 +189,7 @@ class Chapter9ViewTests(TestCase):
                 return False
 
         # Check user was successfully registered
-        self.assertIn('thank you for registering!'.lower(), response.content.lower())
+        self.assertIn('thank you for registering!'.lower(), response.content.decode('ascii').lower())
         user = User.objects.get(username='testuser')
         user_profile = UserProfile.objects.get(user=user)
         path_to_image = './media/profile_images/testuser.jpg'

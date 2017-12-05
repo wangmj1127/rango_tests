@@ -5,7 +5,7 @@ def create_categories():
     categories = []
 
     # Create categories from 1 to 10
-    for i in xrange(1, 11):
+    for i in range(1, 11):
         cat = Category(name="Category " + str(i), likes=i)
         cat.save()
         categories.append(cat)
@@ -17,11 +17,11 @@ def create_pages(categories):
     pages = []
 
     # For each category create 2 pages
-    for i in xrange (0, len(categories)):
+    for i in range (0, len(categories)):
         category = categories[i]
 
         # Name the pages according to the links and create a fake url
-        for j in xrange(0, 2):
+        for j in range(0, 2):
             page_number = i * 2 + j + 1
             page = Page(category=category, title="Page " + str(page_number),
                         url="http://www.page" + str(page_number) + ".com", views=page_number)

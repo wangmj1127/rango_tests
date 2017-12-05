@@ -23,11 +23,6 @@ def generate_file_list(test_cases):
     '''
         Helper function to generate a file list of the test set
     '''
-    # list_no = []
-    # print list_no
-    # for each in test_cases:
-    #     # print int(each.replace("chapter", ""))
-    #     list_no.append(int(each.replace("chapter", "")))
 
     out = ['decorators.py', 'test_utils.py']
     for ch in test_cases:
@@ -45,16 +40,17 @@ def runtests(in_tests, in_errors):
         for key in in_tests[ch]:
             if in_tests[ch][key] is False:
                 temp_test = 'rango.tests_' + ch + '.' + key
-                print temp_test
+                print(temp_test)
                 process = subprocess.Popen(['python', 'manage.py', 'test', temp_test], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
+                out = out.decode('ascii')
+                err = err.decode('ascii')
                 p_status = process.wait()
-                # print err
                 if 'errors' in err or 'Traceback' in err or 'Errno' in err:
-                    print '++++++++++++++++++++++++++++ FAILED!!!!!! ++++++++++++++++++++++++++++'
+                    print('++ FAILED!')
                     out_errors[key] = temp_test + '\n' + err
                 else:
-                    print '++++++++++++++++++++++++++++ PASSED!!!!!! ++++++++++++++++++++++++++++'
+                    print('++PASSED!')
                     out_tests[ch][key] = True
                     out_errors[key] = None
 
@@ -88,9 +84,12 @@ def main(url_git, student_no, date_deadline):
         json.dump(test_cases, fp, indent=4)
 
     try:
-        shutil.rmtree(os.path.join(BASE_DIR, TEMP_DIR), ignore_errors=False, onerror=handleRemoveReadonly)
-    except:
-        print os.path.join(BASE_DIR, TEMP_DIR) + " does not exist!!"
+        #print(os.path.join(BASE_DIR, TEMP_DIR))
+        #shutil.rmtree(os.path.join(BASE_DIR, TEMP_DIR), ignore_errors=False, onerror=handleRemoveReadonly)
+        os.system("rmdir " + os.path.join(BASE_DIR, TEMP_DIR) + " /s /q")
+    except Exception as e:
+        print("Exception -> " + str(e))
+        #print(os.path.join(BASE_DIR, TEMP_DIR) + " does not exist!!")
 
     ## Clone Repository
     with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
@@ -98,7 +97,8 @@ def main(url_git, student_no, date_deadline):
         fp.write('===========================================================================\n\n\n')
 
     ret = subprocess.call(GIT_CLONE + url_git + " " + TEMP_DIR, shell=True)
-    assert ret == 0
+    print(ret)
+    assert(ret == 0)
 
     # Retrieve log history
     with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
@@ -109,10 +109,11 @@ def main(url_git, student_no, date_deadline):
 
     process = subprocess.Popen(GIT_LOG, stdout=subprocess.PIPE)
     out, err = process.communicate()
+    out = out.decode('ascii')
     commits = out.split('\n')[0:-1]
     commits.reverse()
 
-    print "Repository has " + str(len(commits)) + " commits!"
+    print("Repository has " + str(len(commits)) + " commits!")
     noCommits = len(commits)
 
     with open(os.path.join(dir_student, 'commits.txt'), 'w') as fp:
@@ -130,8 +131,8 @@ def main(url_git, student_no, date_deadline):
                 working_dir = os.path.dirname(os.path.abspath(root))
                 break
 
-    print "Project dir: " + working_dir
-    assert os.path.isdir(os.path.abspath(working_dir + '/rango'))
+    print("Project dir: " + working_dir)
+    assert(os.path.isdir(os.path.abspath(working_dir + '/rango')))
 
     with open(os.path.join(dir_student, 'report_errors.txt'), 'w') as fp:
         fp.write("I found errors while running the automated tests in github repository: "+url_git)
@@ -141,8 +142,8 @@ def main(url_git, student_no, date_deadline):
     for c in commits:
         os.chdir(os.path.join(BASE_DIR, TEMP_DIR))
         ret = subprocess.call(GIT_CHKOUT + " " + c, shell=True)
-        assert ret == 0
-        
+        assert(ret == 0)
+
         working_dir = ''
         for root, dirs, files in os.walk("."):
             for name in files:
@@ -150,42 +151,42 @@ def main(url_git, student_no, date_deadline):
                     working_dir = os.path.abspath(root)
                     break
 
-        print working_dir
-        
+        print(working_dir)
+
         # RUN TESTS HERE!!!!
         if os.path.isdir(os.path.abspath(working_dir + '/rango')):
             os.chdir(working_dir)
             try:
                 shutil.rmtree(working_dir + '/rango/migrations', ignore_errors=False, onerror=handleRemoveReadonly)
+                #os.system("rmdir " + os.path.join(BASE_DIR, TEMP_DIR) + " /s /q")
                 os.remove("db.sqlite3")
             except:
-                print "Couldn't delete db.sqlite3 and migrations folder"
+                print("Couldn't delete db.sqlite3 and migrations folder")
             try:
                 subprocess.call('python manage.py makemigrations rango')
             except:
                 try:
                     subprocess.call('python manage.py makemigrations')
                 except:
-                    print "Error while making migrations rango!"
+                    print("Error while making migrations rango!")
             try:
                 subprocess.call('python manage.py migrate')
             except:
-                print "Error while migrating rango!"
+                print("Error while migrating rango!")
             for each in test_files:
                 shutil.copyfile(os.path.join(BASE_DIR, each), os.path.join(working_dir , 'rango', each))
 
 
             test_cases, error_in_tests = runtests(test_cases, error_in_tests)
-        # ==================
 
         # Discard everything
         os.chdir(os.path.join(BASE_DIR, TEMP_DIR))
         ret = subprocess.call(GIT_ADD, shell=True)
-        assert ret == 0
+        assert(ret == 0)
         ret = subprocess.call(GIT_STASH, shell=True)
         ret = subprocess.call(GIT_STASH_DROP, shell=True)
         ret = subprocess.call(GIT_CHKOUT_MASTER, shell=True)
-        assert ret == 0
+        assert(ret == 0)
     ## -------
     os.chdir(BASE_DIR)
 
@@ -203,7 +204,8 @@ def main(url_git, student_no, date_deadline):
     #         fp.write(each)
     #         fp.write('===========================================================================\n\n\n')
 
-    shutil.rmtree(os.path.join(BASE_DIR, TEMP_DIR), ignore_errors=False, onerror=handleRemoveReadonly)
+    #shutil.rmtree(os.path.join(BASE_DIR, TEMP_DIR), ignore_errors=False, onerror=handleRemoveReadonly)
+    os.system("rmdir " + os.path.join(BASE_DIR, TEMP_DIR) + " /s /q")
 
 if __name__ == "__main__":
     import argparse
@@ -215,9 +217,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.url is not None and args.student is not None and args.deadline is not None:
-        try:
-            main(args.url, args.student, args.deadline)
-        except Exception as e:
-            print e.message
+        #try:
+        main(args.url, args.student, args.deadline)
+        #except Exception as e:
+        #    print(e)
     else:
         raise BaseException("url, student number and deadline are required!!. Type 'python main_script.py -h' for further help")

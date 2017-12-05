@@ -10,7 +10,7 @@ from django.contrib.staticfiles import finders
 #Chapter 5
 from rango.models import Page, Category
 import populate_rango
-import test_utils
+import rango.test_utils as test_utils
 
 #Chapter 6
 from rango.decorators import chapter6
@@ -39,8 +39,8 @@ class Chapter6ViewTests(TestCase):
         response = self.client.get(reverse('index'))
 
         # Context dictionary is then empty
-        self.assertItemsEqual(response.context['categories'], [])
-        self.assertItemsEqual(response.context['pages'], [])
+        self.assertCountEqual(response.context['categories'], [])
+        self.assertCountEqual(response.context['pages'], [])
 
         categories = test_utils.create_categories()
         test_utils.create_pages(categories)
@@ -53,8 +53,8 @@ class Chapter6ViewTests(TestCase):
         pages = Page.objects.order_by('-views')[:5]
 
         # Check context dictionary filled
-        self.assertItemsEqual(response.context['categories'], categories)
-        self.assertItemsEqual(response.context['pages'], pages)
+        self.assertCountEqual(response.context['categories'], categories)
+        self.assertCountEqual(response.context['pages'], pages)
 
     def test_index_displays_five_most_liked_categories(self):
         #Create categories
@@ -64,15 +64,15 @@ class Chapter6ViewTests(TestCase):
         response = self.client.get(reverse('index'))
 
         # Check if the 5 pages with most likes are displayed
-        for i in xrange(10, 5, -1):
-            self.assertIn("Category " + str(i), response.content)
+        for i in range(10, 5, -1):
+            self.assertIn("Category " + str(i), response.content.decode('ascii'))
 
     def test_index_displays_no_categories_message(self):
         # Access index with empty database
         response = self.client.get(reverse('index'))
 
         # Check if no categories message is displayed
-        self.assertIn("There are no categories present.", response.content)
+        self.assertIn("There are no categories present.", response.content.decode('ascii'))
 
     def test_index_displays_five_most_viewed_pages(self):
         #Create categories
@@ -85,8 +85,8 @@ class Chapter6ViewTests(TestCase):
         response = self.client.get(reverse('index'))
 
         # Check if the 5 pages with most views are displayed
-        for i in xrange(20, 15, -1):
-            self.assertIn("Page " + str(i), response.content)
+        for i in range(20, 15, -1):
+            self.assertIn("Page " + str(i), response.content.decode('ascii'))
 
     def test_index_contains_link_to_categories(self):
         #Create categories
@@ -96,9 +96,9 @@ class Chapter6ViewTests(TestCase):
         response = self.client.get(reverse('index'))
 
         # Check if the 5 pages with most likes are displayed
-        for i in xrange(10, 5, -1):
+        for i in range(10, 5, -1):
             category = categories[i - 1]
-            self.assertIn(reverse('show_category', args=[category.slug])[:-1], response.content)
+            self.assertIn(reverse('show_category', args=[category.slug])[:-1], response.content.decode('ascii'))
 
     def test_category_context(self):
         #Create categories and pages for categories
@@ -109,7 +109,7 @@ class Chapter6ViewTests(TestCase):
         for category in categories:
             response = self.client.get(reverse('show_category', args=[category.slug]))
             pages = Page.objects.filter(category=category)
-            self.assertItemsEqual(response.context['pages'], pages)
+            self.assertCountEqual(response.context['pages'], pages)
             self.assertEquals(response.context['category'], category)
 
     def test_category_page_using_template(self):
@@ -140,8 +140,8 @@ class Chapter6ViewTests(TestCase):
 
             # Check pages are displayed and they have a link
             for page in pages:
-                self.assertIn(page.title, response.content)
-                self.assertIn(page.url, response.content)
+                self.assertIn(page.title, response.content.decode('ascii'))
+                self.assertIn(page.url, response.content.decode('ascii'))
 
     def test_category_page_displays_empty_message(self):
         #Create categories in database
@@ -151,12 +151,12 @@ class Chapter6ViewTests(TestCase):
         for category in categories:
             # Access category page
             response = self.client.get(reverse('show_category', args=[category.slug]))
-            self.assertIn("No pages currently in category.".lower(), response.content.lower())
+            self.assertIn("No pages currently in category.".lower(), response.content.decode('ascii').lower())
 
     def test_category_page_displays_category_does_not_exist_message(self):
         # Try to access categories not saved to database and check the message
         response = self.client.get(reverse('show_category', args=['Python']))
-        self.assertIn("does not exist!".lower(), response.content.lower())
+        self.assertIn("does not exist!".lower(), response.content.decode('ascii').lower())
 
         response = self.client.get(reverse('show_category', args=['Django']))
-        self.assertIn("does not exist!".lower(), response.content.lower())
+        self.assertIn("does not exist!".lower(), response.content.decode('ascii').lower())

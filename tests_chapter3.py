@@ -10,7 +10,7 @@ class Chapter3ViewTests(TestCase):
     def test_index_contains_hello_message(self):
         # Check if there is the message 'hello world!'
         response = self.client.get(reverse('index'))
-        self.assertIn('Rango says'.lower(), response.content.lower())
+        self.assertIn('Rango says'.lower(), response.content.decode('ascii').lower())
 
         # file.write('test_index_contains_hello_message\n')
 
@@ -18,4 +18,4 @@ class Chapter3ViewTests(TestCase):
         # Check if in the about page is there a message
         self.client.get(reverse('index'))
         response = self.client.get(reverse('about'))
-        self.assertIn('Rango says here is the about page'.lower(), response.content.lower())
+        self.assertIn('Rango says here is the about page'.lower(), response.content.decode('ascii').lower())

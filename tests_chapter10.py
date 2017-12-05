@@ -10,7 +10,7 @@ from django.contrib.staticfiles import finders
 #Chapter 5
 from rango.models import Page, Category
 import populate_rango
-import test_utils
+import rango.test_utils as test_utils
 
 #Chapter 6
 from rango.decorators import chapter6
@@ -40,7 +40,7 @@ from datetime import datetime, timedelta
 class Chapter10SessionTests(TestCase):
     def test_user_number_of_access_and_last_access_to_index(self):
         #Access index page 100 times
-        for i in xrange(0, 100):
+        for i in range(0, 100):
             try:
                 response = self.client.get(reverse('index'))
             except:
@@ -83,7 +83,7 @@ class Chapter10ViewTests(TestCase):
                 return False
 
         # Check it contains visits message
-        self.assertIn('visits: 1'.lower(), response.content.lower())
+        self.assertIn('visits: 1'.lower(), response.content.decode('ascii').lower())
 
     def test_about_page_shows_number_of_visits(self):
         #Access index page to count one visit
@@ -105,7 +105,7 @@ class Chapter10ViewTests(TestCase):
                 return False
 
         # Check it contains visits message
-        self.assertIn('visits: 1'.lower(), response.content.lower())
+        self.assertIn('visits: 1'.lower(), response.content.decode('ascii').lower())
 
     def test_visit_number_is_passed_via_context(self):
         #Access index
