@@ -72,7 +72,7 @@ class Chapter6ViewTests(TestCase):
         response = self.client.get(reverse('index'))
 
         # Check if no categories message is displayed
-        self.assertIn("There are no categories present.", response.content.decode('ascii'))
+        self.assertIn("There are no categories present.".lower(), response.content.decode('ascii').lower())
 
     def test_index_displays_five_most_viewed_pages(self):
         #Create categories
