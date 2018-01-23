@@ -80,7 +80,9 @@ class Chapter9ViewTests(TestCase):
         self.assertEquals(response.context['profile_form'].as_p(), profile_form.as_p())
 
         # Check submit button
-        self.assertIn('type="submit" name="submit" value="Register"', response.content.decode('ascii'))
+        self.assertIn('type="submit"', response.content.decode('ascii'))
+		self.assertIn('name="submit"', response.content.decode('ascii'))
+		self.assertIn('value="Register"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_form_is_displayed_correctly(self):
@@ -99,14 +101,20 @@ class Chapter9ViewTests(TestCase):
 
         #Username label and input text
         self.assertIn('Username:', response.content.decode('ascii'))
-        self.assertIn('input type="text" name="username" value="" size="50"', response.content.decode('ascii'))
+        self.assertIn('input type="text"', response.content.decode('ascii'))
+		self.assertIn('name="username"', response.content.decode('ascii'))
+		self.assertIn('size="50"', response.content.decode('ascii'))
 
         #Password label and input text
         self.assertIn('Password:', response.content.decode('ascii'))
-        self.assertIn('input type="password" name="password" value="" size="50"', response.content.decode('ascii'))
+        self.assertIn('input type="password"', response.content.decode('ascii'))
+		self.assertIn('name="password"', response.content.decode('ascii'))
+		self.assertIn('value=""', response.content.decode('ascii'))
+		self.assertIn('size="50"', response.content.decode('ascii'))
 
         #Submit button
-        self.assertIn('input type="submit" value="submit"', response.content.decode('ascii'))
+        self.assertIn('input type="submit"', response.content.decode('ascii'))
+		self.assertIn('value="submit"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_form_is_displayed_correctly(self):
@@ -122,17 +130,23 @@ class Chapter9ViewTests(TestCase):
         #Check form display
         #Header
         self.assertIn('<h1>Login to Rango</h1>'.lower(), response.content.decode('ascii').lower())
-
-        #Username label and input text
+		
+		#Username label and input text
         self.assertIn('Username:', response.content.decode('ascii'))
-        self.assertIn('input type="text" name="username" value="" size="50"', response.content.decode('ascii'))
+        self.assertIn('input type="text"', response.content.decode('ascii'))
+		self.assertIn('name="username"', response.content.decode('ascii'))
+		self.assertIn('size="50"', response.content.decode('ascii'))
 
         #Password label and input text
         self.assertIn('Password:', response.content.decode('ascii'))
-        self.assertIn('input type="password" name="password" value="" size="50"', response.content.decode('ascii'))
+        self.assertIn('input type="password"', response.content.decode('ascii'))
+		self.assertIn('name="password"', response.content.decode('ascii'))
+		self.assertIn('value=""', response.content.decode('ascii'))
+		self.assertIn('size="50"', response.content.decode('ascii'))
 
         #Submit button
-        self.assertIn('input type="submit" value="submit"', response.content.decode('ascii'))
+        self.assertIn('input type="submit"', response.content.decode('ascii'))
+		self.assertIn('value="submit"', response.content.decode('ascii'))
 
     @chapter9
     def test_login_provides_error_message(self):
