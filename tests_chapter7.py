@@ -51,7 +51,10 @@ class Chapter7ViewTests(TestCase):
         self.assertIn('Please enter the category name.'.lower(), response.content.decode('ascii').lower())
 
         # Text input
-        self.assertIn('id="id_name" maxlength="128" name="name" type="text"', response.content.decode('ascii'))
+        self.assertIn('id="id_name"', response.content.decode('ascii'))
+        self.assertIn('maxlength="128"', response.content.decode('ascii'))
+        self.assertIn('name="name"', response.content.decode('ascii'))
+        self.assertIn('type="text"', response.content.decode('ascii'))
 
         # Button
         self.assertIn('type="submit" name="submit" value="Create Category"'.lower(), response.content.decode('ascii').lower())
@@ -85,10 +88,16 @@ class Chapter7ViewTests(TestCase):
             self.assertIn('Please enter the URL of the page.'.lower(), response.content.decode('ascii').lower())
 
             # Text input 1
-            self.assertIn('id="id_title" maxlength="128" name="title" type="text"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('id="id_title"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('maxlength="128"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('name="title"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('type="text"'.lower(), response.content.decode('ascii').lower())
 
             # Text input 2
-            self.assertIn('id="id_url" maxlength="200" name="url" type="url"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('id="id_url"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('maxlength="200"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('name="url"'.lower(), response.content.decode('ascii').lower())
+            self.assertIn('type="url"'.lower(), response.content.decode('ascii').lower())
 
             # Button
             self.assertIn('type="submit" name="submit" value="Add Page"'.lower(), response.content.decode('ascii').lower())

@@ -43,9 +43,12 @@ def runtests(in_tests, in_errors):
                 print(temp_test)
                 process = subprocess.Popen(['python', 'manage.py', 'test', temp_test], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
-                out = out.decode('ascii')
-                err = err.decode('ascii')
                 p_status = process.wait()
+                out = out.decode('utf-8')
+                try:
+                    err = err.decode('utf-8')
+                except:
+                    err = str(err)
                 if 'errors' in err or 'Traceback' in err or 'Errno' in err:
                     print('++ FAILED!')
                     out_errors[key] = temp_test + '\n' + err
