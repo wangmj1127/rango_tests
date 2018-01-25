@@ -49,7 +49,7 @@ def runtests(in_tests, in_errors):
                     err = err.decode('utf-8')
                 except:
                     err = str(err)
-                if 'errors' in err or 'Traceback' in err or 'Errno' in err:
+                if 'error' in err.lower() or 'errors' in err.lower() or 'Traceback' in err or 'Errno' in err:
                     print('++ FAILED!')
                     out_errors[key] = temp_test + '\n' + err
                 else:
