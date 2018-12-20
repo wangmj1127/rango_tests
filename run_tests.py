@@ -112,6 +112,7 @@ def main(url_git, student_no, date_deadline):
 
     process = subprocess.Popen(GIT_LOG, stdout=subprocess.PIPE)
     out, err = process.communicate()
+    print(out)
     out = out.decode('ascii')
     commits = out.split('\n')[0:-1]
     commits.reverse()
